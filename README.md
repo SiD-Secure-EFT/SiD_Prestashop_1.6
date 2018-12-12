@@ -1,5 +1,5 @@
 # SiD_Prestashop_1.6
-## SiD Instant EFT Magento plugin v1.5.3.2 for Prestashop 1.6
+## SiD Instant EFT plugin v1.5.3.2 for Prestashop 1.6
 
 This is the SiD Instant EFT plugin for Prestashop 1.6. Please feel free to contact the SiD Instant EFT support team at support@sidpayment.com should you require any assistance.
 
