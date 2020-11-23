@@ -14,14 +14,8 @@ include dirname( __FILE__ ) . '/sid.php';
 // Verify the order exists
 if ( !isset( $_POST["SID_REFERENCE"] ) || empty( $_POST["SID_REFERENCE"] ) ) {
     echo "Order ID is not set or emtpy!";
-} else {
-    global $cookie, $cart;
 
-    if ( $cart->OrderExists() ) {
-        $SID      = new SID();
-        $customer = new Customer( $cart->id_customer );
-        Tools::redirect( 'index.php?controller=order-confirmation&id_cart=' . $cart->id . '&id_module=' . $SID->id . '&key=' . $customer->secure_key );
-    }
+} else {
 
     // Retrieve the variables posted back from SID
     $_RESULT = $_POST['SID_STATUS'];

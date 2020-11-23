@@ -1,7 +1,6 @@
 # SiD_Prestashop_1.6
 ## SiD Secure EFT plugin v1.5.3.2 for Prestashop 1.6
-
-This is the SiD Secure EFT plugin for Prestashop 1.6. Please feel free to contact the SiD Secure EFT support team at support@sidpayment.com should you require any assistance.
+Please note that PrestaShop 1.6 reached end of life as of 1st of July 2019. This means that the maintenance of PrestaShop 1.6.1.x is now being performed exclusively by volunteers (https://build.prestashop.com/news/1.6.1.x-what-s-next/). For this reason, while the module is still available on Github as an archive, this project is not under active development.
 
 ## Installation
 
