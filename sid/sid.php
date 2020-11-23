@@ -18,10 +18,9 @@ class SID extends PaymentModule
 
     public function __construct()
     {
-        $this->name    = 'sid'; // Name of module
-        $this->tab     = 'payments_gateways'; // Where module will be found
-        $this->version = '1.5.3.2';
-        $this->author = 'SiD Instant EFT';
+        $this->name    = 'sid'; //name of module
+        $this->tab     = 'Methods'; //were module will be found
+        $this->version = '1.5.3.1'; //verison that its compatible with
 
         $this->currencies      = true;
         $this->currencies_mode = 'radio';
@@ -73,9 +72,9 @@ class SID extends PaymentModule
     public function install()
     {
         if ( !parent::install()
-            or !Configuration::updateValue( 'SID_URL', 'https://www.sidpayment.com/paySID/' ) // SID redirect url
-            or !Configuration::updateValue( 'SID_MERCHANT', 'PHONE7' ) // Default merchant
-            or !Configuration::updateValue( 'SID_PRIVATE_KEY', '539B47C2B8D6C4CCFA5CC820A22D9529RldHSDU2NjIKRldHSDU2NjI1MzlCNDdDMkI4RDZDNENDRkE1Q0M4MjBBMjJEOTUyOpDc' )
+            or !Configuration::updateValue( 'SID_URL', 'https://www.sidpayment.com/paySID/' ) //SID redirect url
+             or !Configuration::updateValue( 'SID_MERCHANT', 'PHONE7' ) //default merchant
+             or !Configuration::updateValue( 'SID_PRIVATE_KEY', '539B47C2B8D6C4CCFA5CC820A22D9529RldHSDU2NjIKRldHSDU2NjI1MzlCNDdDMkI4RDZDNENDRkE1Q0M4MjBBMjJEOTUyOpDc' )
             or !$this->registerHook( 'payment' )
             or !$this->registerHook( 'paymentReturn' ) ) {
             return false;
@@ -99,6 +98,8 @@ class SID extends PaymentModule
 
     public function getContent()
     {
+//        $this->_html = '<h2>SID</h2>';
+
         if ( isset( $_POST['submitSID'] ) ) {
             if ( empty( $_POST['SID_MERCHANT'] ) ) {
                 $this->_postErrors[] = $this->l( 'SID Identifier is required.' );
@@ -120,6 +121,7 @@ class SID extends PaymentModule
             } else {
                 $this->displayErrors();
             }
+
         }
 
         $this->displaySID();
@@ -130,35 +132,36 @@ class SID extends PaymentModule
     public function displayConf()
     {
         $this->_html .= '
-        <div class="conf confirm">
-            <img src="../img/admin/ok.gif" alt="' . $this->l( 'Confirmation' ) . '" />
-            ' . $this->l( 'Settings updated' ) . '
-        </div>';
+		<div class="conf confirm">
+			<img src="../img/admin/ok.gif" alt="' . $this->l( 'Confirmation' ) . '" />
+			' . $this->l( 'Settings updated' ) . '
+		</div>';
     }
 
     public function displayErrors()
     {
         $nbErrors = sizeof( $this->_postErrors );
         $this->_html .= '
-        <div class="alert error">
-            <h3>' . ( $nbErrors > 1 ? $this->l( 'There are' ) : $this->l( 'There is' ) ) . ' ' . $nbErrors . ' ' . ( $nbErrors > 1 ? $this->l( 'errors' ) : $this->l( 'error' ) ) . '</h3>
-            <ol>';
+		<div class="alert error">
+			<h3>' . ( $nbErrors > 1 ? $this->l( 'There are' ) : $this->l( 'There is' ) ) . ' ' . $nbErrors . ' ' . ( $nbErrors > 1 ? $this->l( 'errors' ) : $this->l( 'error' ) ) . '</h3>
+			<ol>';
         foreach ( $this->_postErrors as $error ) {
             $this->_html .= '<li>' . $error . '</li>';
         }
+
         $this->_html .= '
-            </ol>
-        </div>';
+			</ol>
+		</div>';
     }
 
     public function displaySID()
     {
         $this->_html .= '
-        <img src="../modules/sid/sid_logo.jpg" style="float:left; margin-right:15px;" />
-        <b>' . $this->l( 'This module allows you to accept SID Instant EFT payments.' ) . '</b><br /><br />
-        ' . $this->l( 'If the client chooses this payment mode, your SID Instant EFT account will be automatically credited.' ) . '<br />
-        ' . $this->l( 'You need to configure your SID account first before using this module.' ) . '
-        <div style="clear:both;">&nbsp;</div>';
+		<img src="../modules/sid/sid_logo.jpg" style="float:left; margin-right:15px;" />
+		<b>' . $this->l( 'This module allows you to accept SID Instant EFT payments.' ) . '</b><br /><br />
+		' . $this->l( 'If the client chooses this payment mode, your account with SID Instant EFT will be automatically credited.' ) . '<br />
+		' . $this->l( 'You need to configure your SID account first before using this module.' ) . '
+		<div style="clear:both;">&nbsp;</div>';
     }
 
     public function displayFormSettings()
@@ -169,22 +172,25 @@ class SID extends PaymentModule
         $SID_MERCHANT        = array_key_exists( 'SID_MERCHANT', $_POST ) ? $_POST['SID_MERCHANT'] : ( array_key_exists( 'SID_MERCHANT', $conf ) ? $conf['SID_MERCHANT'] : '' );
         $SID_PRIVATE_KEY     = array_key_exists( 'SID_PRIVATE_KEY', $_POST ) ? $_POST['SID_PRIVATE_KEY'] : ( array_key_exists( 'SID_PRIVATE_KEY', $conf ) ? $conf['SID_PRIVATE_KEY'] : '' );
         $SID_seller_password = array_key_exists( 'SID_seller_password', $_POST ) ? $_POST['SID_seller_password'] : ( array_key_exists( 'SID_SELLER_PASSWORD', $conf ) ? $conf['SID_SELLER_PASSWORD'] : '' );
-        $this->_html .= '
-        <form action="' . $_SERVER['REQUEST_URI'] . '" method="post" style="clear: both;">
-        <fieldset>
-            <legend><img src="../img/admin/contact.gif" />' . $this->l( 'Settings' ) . '</legend>
-            <label>' . $this->l( 'Merchant Code' ) . '</label>
-            <div class="margin-form"><input type="text" size="33" name="SID_MERCHANT" value="' . htmlentities( $SID_MERCHANT, ENT_COMPAT, 'UTF-8' ) . '" /></div>
-            <label>' . $this->l( 'SID URL' ) . '</label>
-            <div class="margin-form"><input type="text" size="33" name="SID_URL" value="' . htmlentities( $SID_URL, ENT_COMPAT, 'UTF-8' ) . '" /></div>
 
-            <label>' . $this->l( 'Private Key' ) . '</label>
-            <div class="margin-form"><input type="text" size="33" name="SID_PRIVATE_KEY" value="' . htmlentities( $SID_PRIVATE_KEY, ENT_COMPAT, 'UTF-8' ) . '" /></div>
-            </div>
-            <br />
-            <br /><center><input type="submit" name="submitSID" value="' . $this->l( 'Update settings' ) . '" class="button" /></center>
-        </fieldset>
-        </form>';
+        $this->_html .= '
+		<form action="' . $_SERVER['REQUEST_URI'] . '" method="post" style="clear: both;">
+		<fieldset>
+			<legend><img src="../img/admin/contact.gif" />' . $this->l( 'Settings' ) . '</legend>
+			<label>' . $this->l( 'Merchant Code' ) . '</label>
+			<div class="margin-form"><input type="text" size="33" name="SID_MERCHANT" value="' . htmlentities( $SID_MERCHANT, ENT_COMPAT, 'UTF-8' ) . '" /></div>
+
+			<label>' . $this->l( 'SID URL' ) . '</label>
+			<div class="margin-form"><input type="text" size="33" name="SID_URL" value="' . htmlentities( $SID_URL, ENT_COMPAT, 'UTF-8' ) . '" /></div>
+
+			<label>' . $this->l( 'Private Key' ) . '</label>
+			<div class="margin-form"><input type="text" size="33" name="SID_PRIVATE_KEY" value="' . htmlentities( $SID_PRIVATE_KEY, ENT_COMPAT, 'UTF-8' ) . '" /></div>
+
+			</div>
+			<br />
+			<br /><center><input type="submit" name="submitSID" value="' . $this->l( 'Update settings' ) . '" class="button" /></center>
+		</fieldset>
+		</form>';
     }
 
     public function hookPayment( $params )
@@ -192,41 +198,6 @@ class SID extends PaymentModule
         if ( !$this->active ) {
             return;
         }
-
-        $this->context->controller->addJS( $this->_path . 'js/sidPopup.min.js' );
-        $this->context->controller->addCSS( $this->_path . 'css/sidPopupStyle.min.css' );
-
-        $module_currency = $this->getCurrency();
-
-        if ( $this->context->cart->id_currency != $module_currency->id ) {
-            $this->context->cookie->id_currency = $currency_module->id;
-            $this->context->cart->id_currency   = $currency_module->id;
-            $this->context->cart->update();
-        }
-
-        $SID_MERCHANT    = Configuration::get( 'SID_MERCHANT' );
-        $SID_PRIVATE_KEY = Configuration::get( 'SID_PRIVATE_KEY' );
-        $SID_CURRENCY    = 'ZAR';
-        $SID_COUNTRY     = 'ZA';
-        $SID_REFERENCE   = $this->context->cart->id;
-        $SID_AMOUNT      = $this->context->cart->getOrderTotal( true, 3 );
-        // Hashes the variables
-        $SID_CONSISTENT = strtoupper( hash( 'sha512', $SID_MERCHANT . $SID_CURRENCY . $SID_COUNTRY . $SID_REFERENCE . $SID_AMOUNT . $SID_PRIVATE_KEY ) );
-
-        $this->context->smarty->assign(
-            array(
-                'SID_URL'             => $this->getSIDUrl(),
-                'SID_MERCHANT'        => $SID_MERCHANT,
-                'SID_CURRENCY'        => $SID_CURRENCY,
-                'SID_COUNTRY'         => $SID_COUNTRY,
-                'SID_REFERENCE'       => $SID_REFERENCE,
-                'SID_AMOUNT'          => $SID_AMOUNT,
-                'SID_PRIVATE_KEY'     => $SID_PRIVATE_KEY,
-                'SID_CONSISTENT'      => $SID_CONSISTENT,
-                'total_cart_products' => $total_cart_products,
-                'url'                 => Tools::getHttpHost( true, true ) . __PS_BASE_URI__,
-            )
-        );
 
         return $this->display( __FILE__, 'sid.tpl' );
     }
@@ -242,12 +213,14 @@ class SID extends PaymentModule
 
     public function getL( $key )
     {
+
         $translations = array(
             'Cancel'         => $this->l( 'Cancel' ),
             'My cart'        => $this->l( 'My cart' ),
             'Return to shop' => $this->l( 'Return to shop' ),
         );
         return $translations[$key];
+
     }
 
     private static function getHttpHost( $http = false, $entities = false )
@@ -270,12 +243,13 @@ class SID extends PaymentModule
         $customer = new Customer( intval( $cart->id_customer ) );
 
         parent::validateOrder( $id_cart, $id_order_state, $amountPaid, $paymentMethod, $message, $extraVars );
-        Tools::redirect( 'index.php?controller=order-confirmation&id_cart=' . $cart->id . '&id_module=' . $this->id . '&key=' . $customer->secure_key );
+        return self::getHttpHost( true, true ) . __PS_BASE_URI__ . "order-confirmation.php?key=" . $customer->secure_key . "&id_cart=" . $cart->id . "&id_module=" . $this->id;
+
     }
 
     public function returnerrorurl()
     {
-        return Tools::redirect( $this->context->link->getPageLink( 'order', null, null, array( 'step' => 3 ) ) );
+        return self::getHttpHost( true, true ) . __PS_BASE_URI__ . 'order.php?step=3';
     }
 
     public function getSIDPendingID()
@@ -284,4 +258,5 @@ class SID extends PaymentModule
 
         return $id_status;
     }
+
 }

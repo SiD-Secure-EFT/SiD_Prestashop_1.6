@@ -31,7 +31,7 @@ if ( !Validate::isLoadedObject( $address ) or !Validate::isLoadedObject( $custom
     die( $SID->getL( 'SID error: (invalid address or customer)' ) );
 }
 
-// Check currency of payment
+// check currency of payment
 if ( $currency_order->id != $currency_module->id ) {
     $cookie->id_currency = $currency_module->id;
     $cart->id_currency   = $currency_module->id;
@@ -53,6 +53,7 @@ $smarty->assign( array(
     'cart_text'           => $SID->getL( 'My cart' ),
     'return_text'         => $SID->getL( 'Return to shop' ),
     'SID_URL'             => $SID->getSIDUrl(),
+
     'SID_MERCHANT'        => $SID_MERCHANT,
     'SID_CURRENCY'        => $SID_CURRENCY,
     'SID_COUNTRY'         => $SID_COUNTRY,
